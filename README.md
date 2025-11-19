@@ -21,6 +21,6 @@ docker run \
   comet_submission:latest \
   bash -c """
     cp serve_b1k_multi.py .
-    uv run scripts/serve_b1k_multi.py
+    uv run scripts/serve_b1k_multi.py policy:checkpoint
   """
 ```
