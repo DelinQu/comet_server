@@ -65,17 +65,20 @@ class Args:
     fine_grained_level: int = 0
 
     # Specifies the control mode of the policy.
-    control_mode : str = "receeding_horizon" # receeding_horizon | temporal_ensemble
+    control_mode: str = "receeding_horizon"  # receeding_horizon | temporal_ensemble
 
     # Specifies the action horizon of the policy.
-    max_len : int = 32                  # receeding horizon | receeding temporal mode
-    action_horizon : int = 5            # temporal ensemble mode
-    temporal_ensemble_max : int = 3     # receeding temporal mode
+    max_len: int = 32  # receeding horizon | receeding temporal mode
+    action_horizon: int = 5  # temporal ensemble mode
+    temporal_ensemble_max: int = 3  # receeding temporal mode
+
 
 def create_policy(args: Args) -> _policy.Policy:
     """Create a policy from the given arguments."""
     return _policy_config.create_trained_policy(
-        _config.get_config(args.policy.config), args.policy.dir, default_prompt=args.default_prompt
+        _config.get_config(args.policy.config),
+        args.policy.dir,
+        default_prompt=args.default_prompt,
     )
 
 
@@ -91,13 +94,13 @@ def main(args: Args) -> None:
         policy = _policy.PolicyRecorder(policy, "policy_records")
 
     policy = B1KPolicyWrapper(
-        policy, 
-        task_name=args.task_name, 
+        policy,
+        task_name=args.task_name,
         control_mode=args.control_mode,
         max_len=args.max_len,
         action_horizon=args.action_horizon,
         temporal_ensemble_max=args.temporal_ensemble_max,
-        fine_grained_level=args.fine_grained_level
+        fine_grained_level=args.fine_grained_level,
     )
 
     hostname = socket.gethostname()
