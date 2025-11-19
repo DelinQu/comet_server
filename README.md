@@ -2,6 +2,8 @@
 
 - For single instance mode
 ```bash
+PATH_TO_MODELS=YOUR_HF_MODEL_PATH
+
 docker run \
   --gpus all \
   -p 8000:8000 \
@@ -13,6 +15,8 @@ docker run \
 
 - For multi instance mode
 ```bash
+PATH_TO_MODELS=YOUR_HF_MODEL_PATH
+
 docker run \
   --gpus all \
   -p 8000:8000 \

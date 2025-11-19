@@ -4,7 +4,6 @@ import logging
 import socket
 import tyro
 import asyncio
-import logging
 import time
 import traceback
 import websockets.sync.client
@@ -249,9 +248,9 @@ class EnvMode(enum.Enum):
 
 class WebsocketPolicyServerMulti(WebsocketPolicyServer):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self._task_id = kwargs.pop("task_id", 0)
         self._task_id_lock = asyncio.Lock()
+        super().__init__(*args, **kwargs)
 
     def update_policy(self, task_id: int = 0) -> None:
         policy_dir = f"{CONFIG['mount_base']}/{CONFIG[task_id]['policy_dir']}"
@@ -262,7 +261,7 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
         )
 
         del self._policy
-        
+
         policy = _policy_config.create_trained_policy(
             _config.get_config("comet_submission"),
             policy_dir,
@@ -301,7 +300,7 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
                     continue
 
                 # check if policy matches task_id
-                task_id = result.get("task_id", self._task_id)
+                task_id = int(result.get("task_id", self._task_id))
                 if task_id != self._task_id:
                     async with self._task_id_lock:
                         self.update_policy(task_id)
