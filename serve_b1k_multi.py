@@ -250,7 +250,7 @@ class EnvMode(enum.Enum):
 class WebsocketPolicyServerMulti(WebsocketPolicyServer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._task_id = kwargs.get("task_id", 0)
+        self._task_id = kwargs.pop("task_id", 0)
         self._task_id_lock = asyncio.Lock()
 
     def update_policy(self, task_id: int = 0) -> None:
@@ -260,8 +260,9 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
         logger.info(
             f"Delete task {self._task_id} policy, and create task {task_id} from {policy_dir}"
         )
-        del self._policy
 
+        del self._policy
+        
         policy = _policy_config.create_trained_policy(
             _config.get_config("comet_submission"),
             policy_dir,
@@ -295,16 +296,16 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
                 start_time = time.monotonic()
                 result = unpackb(await websocket.recv())
 
+                if "reset" in result:
+                    self._policy.reset()
+                    continue
+
                 # check if policy matches task_id
                 task_id = result.get("task_id", self._task_id)
                 if task_id != self._task_id:
                     async with self._task_id_lock:
                         self.update_policy(task_id)
                         await websocket.send(packer.pack(self._metadata))
-
-                if "reset" in result:
-                    self._policy.reset()
-                    continue
 
                 obs = deepcopy(result)
 
@@ -397,8 +398,6 @@ class Args:
     action_horizon: int = 5  # temporal ensemble mode
 
     temporal_ensemble_max: int = 3  # receeding temporal mode
-
-    multi: bool = False
 
     task_id: int = 0
 
