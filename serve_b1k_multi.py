@@ -256,28 +256,43 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
         policy_dir = f"{CONFIG['mount_base']}/{CONFIG[task_id]['policy_dir']}"
         task_name = CONFIG[task_id]["task_name"]
 
-        logger.info(
-            f"Delete task {self._task_id} policy, and create task {task_id} from {policy_dir}"
-        )
+        if self._policy is not None and (CONFIG[task_id]["policy_dir"] == CONFIG[self._task_id]["policy_dir"]):
+            logger.warning(f"*** Update task {task_id} policy from {self._task_id} ***")
+            
+            pi05_policy = self._policy.policy
+            policy_metadata = pi05_policy.metadata
 
-        del self._policy
+            policy = B1KPolicyWrapper(
+                pi05_policy,
+                task_name=task_name,
+                control_mode=CONFIG["control_mode"],
+                max_len=CONFIG["max_len"],
+                action_horizon=CONFIG["action_horizon"],
+                temporal_ensemble_max=CONFIG["temporal_ensemble_max"],
+                fine_grained_level=CONFIG["fine_grained_level"],
+            )
 
-        policy = _policy_config.create_trained_policy(
-            _config.get_config("comet_submission"),
-            policy_dir,
-            default_prompt=None,
-        )
-        policy_metadata = policy.metadata
+        else:
+            logger.warning(f"*** Delete task {self._task_id} policy, and create task {task_id} from ckpt {policy_dir} ***")
+            
+            del self._policy
+            
+            pi05_policy = _policy_config.create_trained_policy(
+                _config.get_config("comet_submission"),
+                policy_dir,
+                default_prompt=None,
+            )
+            policy_metadata = pi05_policy.metadata
 
-        policy = B1KPolicyWrapper(
-            policy,
-            task_name=task_name,
-            control_mode=CONFIG["control_mode"],
-            max_len=CONFIG["max_len"],
-            action_horizon=CONFIG["action_horizon"],
-            temporal_ensemble_max=CONFIG["temporal_ensemble_max"],
-            fine_grained_level=CONFIG["fine_grained_level"],
-        )
+            policy = B1KPolicyWrapper(
+                pi05_policy,
+                task_name=task_name,
+                control_mode=CONFIG["control_mode"],
+                max_len=CONFIG["max_len"],
+                action_horizon=CONFIG["action_horizon"],
+                temporal_ensemble_max=CONFIG["temporal_ensemble_max"],
+                fine_grained_level=CONFIG["fine_grained_level"],
+            )
 
         self._policy = policy
         self._task_id = task_id
@@ -301,10 +316,10 @@ class WebsocketPolicyServerMulti(WebsocketPolicyServer):
 
                 # check if policy matches task_id
                 task_id = int(result.get("task_id", self._task_id))
-                if task_id != self._task_id:
+                if task_id != self._task_id or self._policy is None:
                     async with self._task_id_lock:
                         self.update_policy(task_id)
-                        await websocket.send(packer.pack(self._metadata))
+                        # await websocket.send(packer.pack(self._metadata))
 
                 obs = deepcopy(result)
 
@@ -354,10 +369,8 @@ class Checkpoint:
     # Training config name (e.g., "pi0_aloha_sim").
     config: str | None = "comet_submission"
 
-    # Checkpoint directory (e.g., "checkpoints/pi0_aloha_sim/exp/10000").
-    dir: str | None = (
-        "/root/models/2025-11-12-18-33-57_pi05_b1k-turning_on_radio_cs32_bs64_lr2.5e-6_step15k_re_jax/14999"
-    )
+    # Checkpoint directory (e.g., "checkpoints/pi0_aloha_sim/exp/10000"). Must be specified upon launching
+    dir: str | None = None
 
 
 @dataclasses.dataclass
@@ -376,8 +389,8 @@ class Args:
     # prompt.
     default_prompt: str | None = None
 
-    # If provided, will be used to retrieve the prompt of the task, otherwise use turning_on_radio as default.
-    task_name: str | None = "turning_on_radio"
+    # If provided, will be used to retrieve the prompt of the task. Must be specified upon launching
+    task_name: str | None = None
 
     # Port to serve the policy on.
     port: int = 8000
@@ -398,7 +411,7 @@ class Args:
 
     temporal_ensemble_max: int = 3  # receeding temporal mode
 
-    task_id: int = 0
+    task_id: int = None # Must be specified upon launching
 
 
 def create_policy(args: Args) -> _policy.Policy:
@@ -413,28 +426,28 @@ def create_policy(args: Args) -> _policy.Policy:
 def main(args: Args) -> None:
     logging.info(f"Using task_name: {args.task_name}")
 
-    policy = create_policy(args)
-    policy_metadata = policy.metadata
+    # policy = create_policy(args)
+    # policy_metadata = policy.metadata
 
-    policy = B1KPolicyWrapper(
-        policy,
-        task_name=args.task_name,
-        control_mode=args.control_mode,
-        max_len=args.max_len,
-        action_horizon=args.action_horizon,
-        temporal_ensemble_max=args.temporal_ensemble_max,
-        fine_grained_level=args.fine_grained_level,
-    )
+    # policy = B1KPolicyWrapper(
+    #     policy,
+    #     task_name=args.task_name,
+    #     control_mode=args.control_mode,
+    #     max_len=args.max_len,
+    #     action_horizon=args.action_horizon,
+    #     temporal_ensemble_max=args.temporal_ensemble_max,
+    #     fine_grained_level=args.fine_grained_level,
+    # )
 
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     logging.info("Creating server (host: %s, ip: %s)", hostname, local_ip)
 
     server = WebsocketPolicyServerMulti(
-        policy=policy,
+        policy=None,
         host="0.0.0.0",
         port=args.port,
-        metadata=policy_metadata,
+        # metadata=policy_metadata,
         task_id=args.task_id,
     )
 

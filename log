@@ -1,0 +1,199 @@
+# 1. server terminal:
+python /root/models/comet_server/serve_b1k_multi.py policy:checkpoint 
+
+INFO:root:Using task_name: None
+WARNING:__main__:*** Delete task None policy, and create task 1 from ckpt /root/models/17-36-51_pi05_b1k-pt12_cs32_bs32_lr2.5e-5_step100k_gpu80_jax/75000 ***
+INFO:policy:self.task_name='picking_up_trash'
+INFO:policy:self.control_mode='receeding_horizon'
+INFO:policy:self.max_len=32
+INFO:policy:self.action_horizon=5
+INFO:policy:self.temporal_ensemble_max=3
+INFO:policy:self.replan_interval=5
+INFO:policy:self.fine_grained_level=0
+INFO:policy:self.step_counter=0
+INFO:policy:self.action_queue=deque([], maxlen=5)
+INFO:policy:self.task_prompt='Put the three can of soda from the living room inside the tash can in the kitchen.'
+INFO:policy:self.subtask_prompts=None
+INFO:policy:self.skill_prompts=['place in', 'move to', 'place on', 'pick up from']
+
+WARNING:__main__:*** Delete task 1 policy, and create task 0 from ckpt /root/models/2025-11-12-18-33-57_pi05_b1k-turning_on_radio_cs32_bs64_lr2.5e-6_step15k_re_jax/14999 ***
+INFO:policy:self.task_name='turning_on_radio'
+INFO:policy:self.control_mode='receeding_horizon'
+INFO:policy:self.max_len=32
+INFO:policy:self.action_horizon=5
+INFO:policy:self.temporal_ensemble_max=3
+INFO:policy:self.replan_interval=5
+INFO:policy:self.fine_grained_level=0
+INFO:policy:self.step_counter=0
+INFO:policy:self.action_queue=deque([], maxlen=5)
+INFO:policy:self.task_prompt="Turn on the radio receiver that's on the table in the living room."
+INFO:policy:self.subtask_prompts=None
+INFO:policy:self.skill_prompts=['press', 'move to', 'place on', 'pick up from']
+
+WARNING:__main__:*** Delete task 0 policy, and create task 3 from ckpt /root/models/10-00-32_pi05_b1k-pt50_merge1110_cs32_bs64_lr2.5e-5_step50k_gpu400_jax/40000 ***
+INFO:root:Loaded norm stats from /root/models/10-00-32_pi05_b1k-pt50_merge1110_cs32_bs64_lr2.5e-5_step50k_gpu400_jax/40000/assets/behavior-1k/2025-challenge-demos
+INFO:policy:self.task_name='cleaning_up_plates_and_food'
+INFO:policy:self.control_mode='receeding_horizon'
+INFO:policy:self.max_len=32
+INFO:policy:self.action_horizon=5
+INFO:policy:self.temporal_ensemble_max=3
+INFO:policy:self.replan_interval=5
+INFO:policy:self.fine_grained_level=0
+INFO:policy:self.step_counter=0
+INFO:policy:self.action_queue=deque([], maxlen=5)
+INFO:policy:self.task_prompt='From the breakfast table in the kitchen, move both pizzas - keeping each on its plate - into the same refrigerator, put both bowls into one sink, and make sure the refrigerator is closed.'
+INFO:policy:self.subtask_prompts=None
+INFO:policy:self.skill_prompts=['move to', 'close door', 'pick up from', 'place in', 'open door', 'push to']
+
+WARNING:__main__:*** Update task 4 policy from 3 ***
+INFO:policy:self.task_name='can_meat'
+INFO:policy:self.control_mode='receeding_horizon'
+INFO:policy:self.max_len=32
+INFO:policy:self.action_horizon=5
+INFO:policy:self.temporal_ensemble_max=3
+INFO:policy:self.replan_interval=5
+INFO:policy:self.fine_grained_level=0
+INFO:policy:self.step_counter=0
+INFO:policy:self.action_queue=deque([], maxlen=5)
+INFO:policy:self.task_prompt='Open the kitchen cabinet, take out the two hinged jars, open them, place exactly two cooked bratwursts from the chopping board on the countertop into each jar, then close both jars, put them back inside the cabinet, and close the cabinet.'
+INFO:policy:self.subtask_prompts=None
+INFO:policy:self.skill_prompts=['open lid', 'move to', 'close door', 'turn to', 'pick up from', 'place in', 'close lid', 'open door', 'hand over']
+INFO:__main__:Connection from ('127.0.0.1', 53004) closed
+
+
+# 2. client terminal:
+
+python /root/models/comet_server/test_b1k_openpi.py 
+
+[00:00:02.440] [INFO] [omnigibson.learning.utils.network_utils] Health check passed, attempting websocket connection...
+[00:00:02.441] [INFO] [omnigibson.learning.utils.network_utils] Connected to server!
+[00:00:02.441] [WARNING] [root] Created websocket policy
+[00:00:13.503] [WARNING] [root] iter  0: 11.06036639213562 sec
+[00:00:13.503] [WARNING] [root] iter  1: 0.0007245540618896484 sec
+[00:00:13.504] [WARNING] [root] iter  2: 0.0005018711090087891 sec
+[00:00:13.504] [WARNING] [root] iter  3: 0.0004153251647949219 sec
+[00:00:13.505] [WARNING] [root] iter  4: 0.00040841102600097656 sec
+[00:00:13.505] [WARNING] [root] iter  5: 0.0004229545593261719 sec
+[00:00:13.506] [WARNING] [root] iter  6: 0.00040411949157714844 sec
+[00:00:13.506] [WARNING] [root] iter  7: 0.0003867149353027344 sec
+[00:00:13.507] [WARNING] [root] iter  8: 0.00033092498779296875 sec
+[00:00:13.507] [WARNING] [root] iter  9: 0.00037789344787597656 sec
+[00:00:13.507] [WARNING] [root] iter 10: 0.00035858154296875 sec
+[00:00:13.508] [WARNING] [root] iter 11: 0.0003447532653808594 sec
+[00:00:13.508] [WARNING] [root] iter 12: 0.0002918243408203125 sec
+[00:00:13.508] [WARNING] [root] iter 13: 0.00038743019104003906 sec
+[00:00:13.509] [WARNING] [root] iter 14: 0.0004444122314453125 sec
+[00:00:13.509] [WARNING] [root] iter 15: 0.0002887248992919922 sec
+[00:00:13.510] [WARNING] [root] iter 16: 0.00038933753967285156 sec
+[00:00:13.510] [WARNING] [root] iter 17: 0.0003726482391357422 sec
+[00:00:13.510] [WARNING] [root] iter 18: 0.00028133392333984375 sec
+[00:00:13.511] [WARNING] [root] iter 19: 0.0002758502960205078 sec
+[00:00:13.511] [WARNING] [root] iter 20: 0.00027632713317871094 sec
+[00:00:13.511] [WARNING] [root] iter 21: 0.0002732276916503906 sec
+[00:00:13.512] [WARNING] [root] iter 22: 0.0002961158752441406 sec
+[00:00:13.512] [WARNING] [root] iter 23: 0.0002720355987548828 sec
+[00:00:13.512] [WARNING] [root] iter 24: 0.00028252601623535156 sec
+[00:00:13.513] [WARNING] [root] iter 25: 0.0003082752227783203 sec
+[00:00:13.513] [WARNING] [root] iter 26: 0.00028133392333984375 sec
+[00:00:13.513] [WARNING] [root] iter 27: 0.00037384033203125 sec
+[00:00:13.514] [WARNING] [root] iter 28: 0.00048422813415527344 sec
+[00:00:13.514] [WARNING] [root] iter 29: 0.0004742145538330078 sec
+[00:00:13.515] [WARNING] [root] iter 30: 0.00031566619873046875 sec
+[00:00:13.515] [WARNING] [root] iter 31: 0.0003058910369873047 sec
+[00:00:24.666] [WARNING] [root] iter 32: 11.151493310928345 sec
+[00:00:24.667] [WARNING] [root] iter 33: 0.0006496906280517578 sec
+[00:00:24.668] [WARNING] [root] iter 34: 0.0004143714904785156 sec
+[00:00:24.668] [WARNING] [root] iter 35: 0.00039124488830566406 sec
+[00:00:24.669] [WARNING] [root] iter 36: 0.00047278404235839844 sec
+[00:00:24.669] [WARNING] [root] iter 37: 0.0003223419189453125 sec
+[00:00:24.669] [WARNING] [root] iter 38: 0.0002932548522949219 sec
+[00:00:24.670] [WARNING] [root] iter 39: 0.0002830028533935547 sec
+[00:00:24.670] [WARNING] [root] iter 40: 0.0002880096435546875 sec
+[00:00:24.670] [WARNING] [root] iter 41: 0.00029015541076660156 sec
+[00:00:24.670] [WARNING] [root] iter 42: 0.0002853870391845703 sec
+[00:00:24.671] [WARNING] [root] iter 43: 0.00029206275939941406 sec
+[00:00:24.671] [WARNING] [root] iter 44: 0.00028967857360839844 sec
+[00:00:24.671] [WARNING] [root] iter 45: 0.0002770423889160156 sec
+[00:00:24.672] [WARNING] [root] iter 46: 0.00027942657470703125 sec
+[00:00:24.672] [WARNING] [root] iter 47: 0.00028133392333984375 sec
+[00:00:24.672] [WARNING] [root] iter 48: 0.0002810955047607422 sec
+[00:00:24.673] [WARNING] [root] iter 49: 0.0002865791320800781 sec
+[00:00:24.673] [WARNING] [root] iter 50: 0.0002875328063964844 sec
+[00:00:24.673] [WARNING] [root] iter 51: 0.0002808570861816406 sec
+[00:00:24.674] [WARNING] [root] iter 52: 0.00028061866760253906 sec
+[00:00:24.674] [WARNING] [root] iter 53: 0.00027823448181152344 sec
+[00:00:24.674] [WARNING] [root] iter 54: 0.0002779960632324219 sec
+[00:00:24.674] [WARNING] [root] iter 55: 0.00027871131896972656 sec
+[00:00:24.675] [WARNING] [root] iter 56: 0.00027561187744140625 sec
+[00:00:24.675] [WARNING] [root] iter 57: 0.0002880096435546875 sec
+[00:00:24.675] [WARNING] [root] iter 58: 0.0002791881561279297 sec
+[00:00:24.676] [WARNING] [root] iter 59: 0.0002830028533935547 sec
+[00:00:24.676] [WARNING] [root] iter 60: 0.0002846717834472656 sec
+[00:00:24.676] [WARNING] [root] iter 61: 0.00027942657470703125 sec
+[00:00:24.677] [WARNING] [root] iter 62: 0.0002815723419189453 sec
+[00:00:24.677] [WARNING] [root] iter 63: 0.0002732276916503906 sec
+[00:00:35.523] [WARNING] [root] iter 64: 10.845998525619507 sec
+[00:00:35.524] [WARNING] [root] iter 65: 0.0007119178771972656 sec
+[00:00:35.524] [WARNING] [root] iter 66: 0.0005292892456054688 sec
+[00:00:35.525] [WARNING] [root] iter 67: 0.00045609474182128906 sec
+[00:00:35.525] [WARNING] [root] iter 68: 0.0004966259002685547 sec
+[00:00:35.526] [WARNING] [root] iter 69: 0.00038814544677734375 sec
+[00:00:35.526] [WARNING] [root] iter 70: 0.0004203319549560547 sec
+[00:00:35.527] [WARNING] [root] iter 71: 0.0003590583801269531 sec
+[00:00:35.527] [WARNING] [root] iter 72: 0.00048804283142089844 sec
+[00:00:35.528] [WARNING] [root] iter 73: 0.0005233287811279297 sec
+[00:00:35.528] [WARNING] [root] iter 74: 0.0004813671112060547 sec
+[00:00:35.529] [WARNING] [root] iter 75: 0.0005221366882324219 sec
+[00:00:35.529] [WARNING] [root] iter 76: 0.0003662109375 sec
+[00:00:35.530] [WARNING] [root] iter 77: 0.0004200935363769531 sec
+[00:00:35.530] [WARNING] [root] iter 78: 0.0005323886871337891 sec
+[00:00:35.530] [WARNING] [root] iter 79: 0.00033473968505859375 sec
+[00:00:35.531] [WARNING] [root] iter 80: 0.00028324127197265625 sec
+[00:00:35.531] [WARNING] [root] iter 81: 0.0002880096435546875 sec
+[00:00:35.531] [WARNING] [root] iter 82: 0.0002830028533935547 sec
+[00:00:35.532] [WARNING] [root] iter 83: 0.00027680397033691406 sec
+[00:00:35.532] [WARNING] [root] iter 84: 0.00030612945556640625 sec
+[00:00:35.532] [WARNING] [root] iter 85: 0.000396728515625 sec
+[00:00:35.533] [WARNING] [root] iter 86: 0.0003180503845214844 sec
+[00:00:35.533] [WARNING] [root] iter 87: 0.0004646778106689453 sec
+[00:00:35.534] [WARNING] [root] iter 88: 0.0003421306610107422 sec
+[00:00:35.534] [WARNING] [root] iter 89: 0.00041961669921875 sec
+[00:00:35.535] [WARNING] [root] iter 90: 0.0004527568817138672 sec
+[00:00:35.535] [WARNING] [root] iter 91: 0.00046133995056152344 sec
+[00:00:35.536] [WARNING] [root] iter 92: 0.0005602836608886719 sec
+[00:00:35.536] [WARNING] [root] iter 93: 0.00035071372985839844 sec
+[00:00:35.536] [WARNING] [root] iter 94: 0.0004444122314453125 sec
+[00:00:35.537] [WARNING] [root] iter 95: 0.0004642009735107422 sec
+[00:00:43.045] [WARNING] [root] iter 96: 7.508318662643433 sec
+[00:00:43.046] [WARNING] [root] iter 97: 0.0006947517395019531 sec
+[00:00:43.047] [WARNING] [root] iter 98: 0.0004994869232177734 sec
+[00:00:43.047] [WARNING] [root] iter 99: 0.0005445480346679688 sec
+[00:00:43.048] [WARNING] [root] iter 100: 0.0004143714904785156 sec
+[00:00:43.048] [WARNING] [root] iter 101: 0.0007030963897705078 sec
+[00:00:43.049] [WARNING] [root] iter 102: 0.0005350112915039062 sec
+[00:00:43.049] [WARNING] [root] iter 103: 0.0004031658172607422 sec
+[00:00:43.050] [WARNING] [root] iter 104: 0.0004792213439941406 sec
+[00:00:43.050] [WARNING] [root] iter 105: 0.0004596710205078125 sec
+[00:00:43.051] [WARNING] [root] iter 106: 0.00037932395935058594 sec
+[00:00:43.051] [WARNING] [root] iter 107: 0.0002982616424560547 sec
+[00:00:43.051] [WARNING] [root] iter 108: 0.0003025531768798828 sec
+[00:00:43.052] [WARNING] [root] iter 109: 0.0002837181091308594 sec
+[00:00:43.052] [WARNING] [root] iter 110: 0.0002970695495605469 sec
+[00:00:43.052] [WARNING] [root] iter 111: 0.0002834796905517578 sec
+[00:00:43.053] [WARNING] [root] iter 112: 0.0002892017364501953 sec
+[00:00:43.053] [WARNING] [root] iter 113: 0.0002868175506591797 sec
+[00:00:43.053] [WARNING] [root] iter 114: 0.00029969215393066406 sec
+[00:00:43.054] [WARNING] [root] iter 115: 0.00028705596923828125 sec
+[00:00:43.054] [WARNING] [root] iter 116: 0.0002930164337158203 sec
+[00:00:43.054] [WARNING] [root] iter 117: 0.00030684471130371094 sec
+[00:00:43.055] [WARNING] [root] iter 118: 0.00029087066650390625 sec
+[00:00:43.055] [WARNING] [root] iter 119: 0.0003170967102050781 sec
+[00:00:43.055] [WARNING] [root] iter 120: 0.00029587745666503906 sec
+[00:00:43.056] [WARNING] [root] iter 121: 0.00028133392333984375 sec
+[00:00:43.056] [WARNING] [root] iter 122: 0.00028586387634277344 sec
+[00:00:43.056] [WARNING] [root] iter 123: 0.00029015541076660156 sec
+[00:00:43.056] [WARNING] [root] iter 124: 0.0002942085266113281 sec
+[00:00:43.057] [WARNING] [root] iter 125: 0.0002808570861816406 sec
+[00:00:43.057] [WARNING] [root] iter 126: 0.00029206275939941406 sec
+[00:00:43.057] [WARNING] [root] iter 127: 0.0002841949462890625 sec
+[00:00:43.057] [WARNING] [root] torch.Size([1, 23])
